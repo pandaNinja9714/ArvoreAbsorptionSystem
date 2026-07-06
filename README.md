@@ -1,0 +1,1 @@
+Welcome to **Árvore Absorption System**! This mod is a complete architectural rewrite and expansion of the environmental pollution mitigation system for trees in Cities: Skylines II. It allows you to dynamically control and balance how your city's green spaces filter both **Noise Pollution** and **Air Pollution** using advanced mathematical models.
