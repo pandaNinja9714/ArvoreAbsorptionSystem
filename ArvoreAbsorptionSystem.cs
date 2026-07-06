@@ -81,11 +81,15 @@ namespace ArvoreAbsorptionSystem
                 m_NoiseStrength = Mod.m_Setting.TreeNoiseStrength,
                 m_NoiseMode = Mod.m_Setting.NoiseReductionMode,
                 m_NoiseRadius = Mod.m_Setting.NoiseAbsorptionRadius,
+                m_NoiseLogFactor = Mod.m_Setting.NoiseLogFactor,
+                m_NoiseRootFactor = Mod.m_Setting.NoiseRootFactor,
 
                 // Variáveis de Ar
                 m_AirStrength = Mod.m_Setting.TreeAirStrength,
                 m_AirMode = Mod.m_Setting.AirReductionMode,
-                m_AirRadius = Mod.m_Setting.AirAbsorptionRadius
+                m_AirRadius = Mod.m_Setting.AirAbsorptionRadius,
+                m_AirLogFactor = Mod.m_Setting.AirLogFactor,
+                m_AirRootFactor = Mod.m_Setting.AirRootFactor,
             };
 
             JobHandle combinedDeps = JobHandle.CombineDependencies(countHandle, noiseDeps, airDeps);
@@ -136,14 +140,18 @@ namespace ArvoreAbsorptionSystem
             public int m_DensitySize;
 
             // Parâmetros Ruído
-            public int m_NoiseStrength;
-            public int m_NoiseMode;
-            public int m_NoiseRadius;
+            public int m_NoiseStrength; //Força em %
+            public int m_NoiseMode; // modo de calculo
+            public int m_NoiseRadius; // raio
+            public float m_NoiseLogFactor; //constante do log
+            public float m_NoiseRootFactor; //constante da raizq
 
             // Parâmetros Ar
             public int m_AirStrength;
             public int m_AirMode;
             public int m_AirRadius;
+            public float m_AirLogFactor; //constante do log
+            public float m_AirRootFactor; //constante da raizq
 
             public void Execute(int i)
             {
@@ -159,21 +167,23 @@ namespace ArvoreAbsorptionSystem
                 if (effectiveNoiseTreeCount > 0f)
                 {
                     float noiseReduction = 0f;
+                    float noiseForceFactor = m_NoiseStrength / 100f;
+                    float noiseLogFactor = m_NoiseLogFactor;
+                    float noiseRootFactor = m_NoiseRootFactor;
 
                     // Switch para processar o modo escolhido pelo usuário no menu
                     switch (m_NoiseMode)
                     {
                         case 1: // Realista (Logarítmico)
-                            noiseReduction = math.log2(effectiveNoiseTreeCount + 1f) * m_NoiseStrength;
+                            noiseReduction = math.log10(effectiveNoiseTreeCount + 1f) * (noiseForceFactor + noiseLogFactor);
                             break;
 
                         case 2: // Parabólico (Raiz Quadrada)
-                                // Multiplicamos por 1.5f para equilibrar o slider com as outras curvas
-                            noiseReduction = math.sqrt(effectiveNoiseTreeCount) * (m_NoiseStrength * 1.5f);
+                            noiseReduction = math.sqrt(effectiveNoiseTreeCount) * (noiseForceFactor * noiseRootFactor);
                             break;
 
                         default: // Caso 0: Linear (Padrão)
-                            noiseReduction = effectiveNoiseTreeCount * (m_NoiseStrength / 10f);
+                            noiseReduction = effectiveNoiseTreeCount * noiseForceFactor;
                             break;
                     }
 
@@ -189,22 +199,25 @@ namespace ArvoreAbsorptionSystem
                 if (effectiveAirTreeCount > 0f)
                 {
                     float airReduction = 0f;
+                    float airFactorForce = m_AirStrength / 100f;
+                    float airLogFactor = m_NoiseLogFactor;
+                    float airRootFactor = m_NoiseRootFactor;
 
                     // Switch para processar o modo escolhido para o Ar no menu
                     switch (m_AirMode)
                     {
                         case 1: // Realista (Logarítmico Base 10)
                                 // Multiplicamos por 3.32f para compensar a escala menor do log10
-                            airReduction = math.log10(effectiveAirTreeCount + 1f) * (m_AirStrength * 3.32f);
+                            airReduction = math.log10(effectiveAirTreeCount + 1f) * (airFactorForce + airLogFactor);
                             break;
 
                         case 2: // Parabólico (Raiz Quadrada)
                                 // Multiplicamos por 1.5f para equilibrar a curva com os outros modos
-                            airReduction = math.sqrt(effectiveAirTreeCount) * (m_AirStrength * 1.5f);
+                            airReduction = math.sqrt(effectiveAirTreeCount) * (airFactorForce * airRootFactor);
                             break;
 
                         default: // Caso 0: Linear (Padrão)
-                            airReduction = effectiveAirTreeCount * (m_AirStrength / 10f);
+                            airReduction = effectiveAirTreeCount * airFactorForce;
                             break;
                     }
 

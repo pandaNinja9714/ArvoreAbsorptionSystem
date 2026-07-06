@@ -25,6 +25,9 @@ namespace ArvoreAbsorptionSystem
         [SettingsUISection(kSection, "General")]
         public int UpdateInterval { get; set; } = 128;
 
+        [SettingsUISection(kSection, "General")]
+        public bool VerboseLogging { get; set; } = false;
+
         // ================= NOISE POLLUTION CONTROLS =================
         [SettingsUISlider(min = 0, max = 500, step = 1, unit = Unit.kPercentage)]
         [SettingsUISection(kSection, "Noise Reduction")]
@@ -34,11 +37,17 @@ namespace ArvoreAbsorptionSystem
         [SettingsUISection(kSection, "Noise Reduction")]
         public int NoiseAbsorptionRadius { get; set; } = 1;
 
-        // Voltamos para 'int' para destravar os botões na UI!
         [SettingsUIDropdown(typeof(Setting), nameof(GetModeItems))]
         [SettingsUISection(kSection, "Noise Reduction")]
         public int NoiseReductionMode { get; set; } = 0;
 
+        [SettingsUISlider(min = 1.0f, max = 6.0f, step = 0.1f, unit = Unit.kFloatTwoFractions)]
+        [SettingsUISection(kSection, "Noise Reduction")]
+        public float NoiseLogFactor { get; set; } = 1.2f;
+        
+        [SettingsUISlider(min = 1.0f, max = 3.0f, step = 0.1f, unit = Unit.kFloatTwoFractions)]
+        [SettingsUISection(kSection, "Noise Reduction")]
+        public float NoiseRootFactor { get; set; } = 1.5f;
 
         // ================= AIR POLLUTION CONTROLS =================
         [SettingsUISlider(min = 0, max = 500, step = 1, unit = Unit.kPercentage)]
@@ -49,16 +58,21 @@ namespace ArvoreAbsorptionSystem
         [SettingsUISection(kSection, "Air Purification")]
         public int AirAbsorptionRadius { get; set; } = 1;
 
-        // Voltamos para 'int' para destravar os botões na UI!
         [SettingsUIDropdown(typeof(Setting), nameof(GetModeItems))]
         [SettingsUISection(kSection, "Air Purification")]
         public int AirReductionMode { get; set; } = 0;
 
+        [SettingsUISlider(min = 1.0f, max = 6.0f, step = 0.1f, unit = Unit.kFloatTwoFractions)]
+        [SettingsUISection(kSection, "Air Purification")]
+        public float AirLogFactor { get; set; } = 3.5f;
 
-        [SettingsUISection(kSection, "General")]
-        public bool VerboseLogging { get; set; } = false;
+        [SettingsUISlider(min = 1.0f, max = 3.0f, step = 0.1f, unit = Unit.kFloatTwoFractions)]
+        [SettingsUISection(kSection, "Air Purification")]
+        public float AirRootFactor { get; set; } = 1.5f;
 
-        // DropdownItem configurado como <int>, mas forçando as chaves estáveis de texto
+
+
+        
         public DropdownItem<int>[] GetModeItems()
         {
             return new[]
