@@ -4,16 +4,66 @@
 
 <Publish>
     <!-- Mod ID must be 0 for publishing a mod for the first time.  Mod ID must be set in order to update an existing mod. -->
-    <ModId Value="0" />
+    <ModId Value="150254" />
 
     <!-- Name of the mod to display to players.  Copied from assembly Title. -->
     <DisplayName Value="Árvore Absorption System" />
 
     <!-- Short description of the mod.  Copied from assembly Description. -->
-    <ShortDescription Value="A complete, high-performance(?) rewrite of environmental tree absorption (Noise and Air) with custom mathematical curves." />
+    <ShortDescription Value="EN This mod allows trees to clean up pollution (noise and air). PT Esse mod permite as arvores limparem  poluição (Sonora e Ar)." />
 
     <!-- Long description of the mod.  Copied from ReadMe.md file.  Supports minimal markdown subset. -->
-	<LongDescription Value="Welcome to **Árvore Absorption System**! This mod is a complete architectural rewrite and expansion of the environmental pollution mitigation system for trees in Cities: Skylines II. It allows you to dynamically control and balance how your city's green spaces filter both **Noise Pollution** and **Air Pollution** using advanced mathematical models."/>
+	<LongDescription Value="
+# 🌲 Árvore Absorption System
+
+Welcome to **Árvore Absorption System**! This mod is a complete architectural rewrite and expansion of the environmental pollution mitigation system for trees in Cities: Skylines II. It allows you to dynamically control and balance how your city's green spaces filter both **Noise Pollution and Air Pollution** using advanced mathematical models.
+
+## 📜 The Backstory &amp; Special Thanks
+
+This project is a spiritual successor and total rebuild inspired by the original mod **Trees Reduce Noise Pollution** developed by kepler444f (GitHub: kepler444a-f).
+
+### Why a new mod?
+
+*   The original mod was an incredible milestone for the community, but it has unfortunately remained outdated and incompatible with recent game simulation pipelines and UI localization engine updates. To prevent this crucial feature from breaking permanently and to introduce massive performance upgrades, multi-language support, and Air Purification logic, I rebuilt the entire code from scratch into this brand-new, definitive system. A huge thank you to kepler444f for the original concept and foundation!
+
+## 🧠 Technical Deep Dive: The Mathematical Models
+
+Every tree canopy in the game acts as a dynamic node in the pollution grid. Inside the settings panel, you can configure the calculation behavior independently for \*\*Noise\*\* and \*\*Air\*\* using three distinct curves:
+
+### 1\. 📐 LIN (Linear Mode)
+
+*   A straightforward, constant accumulation model. Every tree provides a fixed, identical absolute value of environmental absorption, regardless of how dense the forest is. It is highly predictable and ideal for players who want immediate, aggressive results for every single tree planted.
+
+### 2\. 📈 LOG (Logarithmic Mode)
+
+*   Based on real-world acoustic and atmospheric saturation physics, this model introduces diminishing returns. The first few rows of trees block the majority of the pollution. As the woodland grows denser, the marginal utility of each additional tree decreases, simulating real-world forest saturation.
+
+### 3\. 🪃 SQRT (Parabolic Mode)
+
+*   Calculates mitigation using a smooth quadratic curve (Square Root). This model sits perfectly between Linear and Logarithmic, preventing individual trees from being overpowered while maintaining a balanced, fluid scaling factor for large parks and greenbelts.
+
+### 🌀 Advanced Feature: Cell Bleedover (Radius Control)
+
+The game engine normally locks pollution calculations inside isolated map grid cells. This mod introduces a Bleedover Radius (0 to 5 cells) slider. When activated, the absorption effect smoothly overflows into adjacent grid cells using a realistic distance falloff calculation, creating organic protective barriers.
+
+Math Logic: readme.md on github for more details on the mathematical calculations
+
+## 🌐 Complete Native UI &amp; Multi-Language
+
+The interface is hard-coded into native C# dictionaries, entirely bypassing broken HTML layout engines. Dropdowns utilize clean, universal scientific abbreviations (**LIN, LOG, SQRT**), backed by comprehensive real-time tooltips fully localized in:
+
+*   🇧🇷 Português (pt-BR)
+*   🇬🇧 English (en-US)
+*   🇩🇪 Deutsch (de-DE)
+*   🇫🇷 Français (fr-FR)
+*   🇨🇳 简体中文 (zh-HANS)
+
+## ⚙️ Configuration &amp; Performance
+
+*   Update Interval: Adjustable slider (16 to 512 frames). Lower values are extremely accurate to changing tree ages/seasons; higher values drastically reduce CPU simulation overhead.
+*   Diagnostic Logs: Toglable Verbose Logging that pipes cleanly into the game's native Player.log framework without causing performance micro-stutters.
+
+"/>
 
     <!-- Thumbnail. -->
     <Thumbnail Value="Properties/Thumbnail.png" />
@@ -29,25 +79,36 @@
     <ForumLink Value="" />
 
     <!-- Version of the mod.  Copied from assembly Version. -->
-    <ModVersion Value="1.0.0" />
+    <ModVersion Value="1.2.0" />
 
     <!-- Recommended version of the base game to use the mod. -->
-    <GameVersion Value="1.*" />
+    <GameVersion Value="1.6.*" />
 
     <!-- Dependency for the mod.  Can be set multiple times. -->
     <Dependency Id="" />
 
     <!-- Required DLC.  Can be set multiple times. -->
     <!-- Supported values are "Landmark Buildings", "San Fransisco Set", "Beach Properties", "Urban Promenades", "Modern Architecture" -->
-    <RequiredDLC Value="" />
+    <RequiredDLC Value="" />a   
 
     <!-- Change log.  Copied from ChangeLog.md file.  Supports minimal markdown subset. -->
     <ChangeLog>
-- Initial release.
-</ChangeLog>
+		Changelog - Versão 1.2.0
+		Novidades
+	    - Controle Independente: Agora você pode ligar/desligar a absorção de Ruído e de Ar separadamente.
+		- Suporte Global (6 Idiomas): Adicionada tradução nativa para Espanhol, Italiano, Japonês, Coreano, Polonês e Russo.
+
+		Otimização
+		- Uso de Células de Trabalho (Jobs): Se um tipo de poluição estiver desativado, o processador agora pula completamente aquele bloco de código no Unity, mantendo o mod super leve em megacidades.
+
+		Correções (Bug Fixes)
+		- Separação de Parâmetros: Corrigido bug onde o cálculo do Ar lia os sliders de configuração do Ruído. Agora cada um responde estritamente ao seu painel.
+		- Ajuste no Chinês (zh-Hans): Corrigido o erro de chaves duplicadas no dicionário que crashava o carregamento do idioma chinês.
+	</ChangeLog>
 
     <!-- External links.  Can be set multiple times. -->
     <!-- Supported types are discord, github, youtube, twitch, x, paypal, patreon, buymeacoffee, kofi, crowdin, gitlab, gofundme, bluesky. -->
     <!-- Access Control Level.  Supported values: Public, Private, Unlisted -->
     <AccessLevel Value="Public" />
+	
 </Publish>

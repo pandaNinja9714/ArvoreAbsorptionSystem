@@ -1,3 +1,29 @@
+Changelog - Versão 1.2.0
+EN
+New Features
+- Independent Toggles: You can now enable or disable Noise and Air pollution absorption completely separately.
+- Global Support (9 Languages): Added native translations for English, German, French, Spanish, Italian, Japanese, Korean, Polish, and Russian.
+
+Optimization
+- Optimized Unity Jobs: Disabling a pollution type now forces the processor to completely skip that code block inside the multi-threaded job, keeping the mod extremely lightweight for megacities.
+
+Bug Fixes
+- Parameter Segregation: Fixed a bug where Air purification calculations were accidentally reading the Noise config sliders. Each system now responds strictly to its own panel.
+- Chinese Language Fix (zh-Hans): Resolved a duplicate dictionary key error that was crashing the mod when loading the Chinese translation.
+
+PT
+Novidades
+- Controle Independente: Agora você pode ligar/desligar a absorção de Ruído e de Ar separadamente.
+- Suporte Global (6 Idiomas): Adicionada tradução nativa para Espanhol, Italiano, Japonês, Coreano, Polonês e Russo.
+
+Otimização
+- Uso de Células de Trabalho (Jobs): Se um tipo de poluição estiver desativado, o processador agora pula completamente aquele bloco de código no Unity, mantendo o mod super leve em megacidades.
+
+Correções (Bug Fixes)
+- Separação de Parâmetros: Corrigido bug onde o cálculo do Ar lia os sliders de configuração do Ruído. Agora cada um responde estritamente ao seu painel.
+- Ajuste no Chinês (zh-Hans): Corrigido o erro de chaves duplicadas no dicionário que crashava o carregamento do idioma chinês.
+
+
 Changelog - Version 1.1.0
 
 EN

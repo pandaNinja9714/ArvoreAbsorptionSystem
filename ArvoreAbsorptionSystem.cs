@@ -77,6 +77,10 @@ namespace ArvoreAbsorptionSystem
                 m_Density = m_DensityMap,
                 m_DensitySize = TEXTURE_SIZE,
 
+                // Novas Flags de Ativação Segregada (Crie essas propriedades no seu Mod.m_Setting)
+                m_NoiseEnabled = Mod.m_Setting.NoiseReductionEnabled,
+                m_AirEnabled = Mod.m_Setting.AirReductionEnabled,
+
                 // Variáveis de Ruído
                 m_NoiseStrength = Mod.m_Setting.TreeNoiseStrength,
                 m_NoiseMode = Mod.m_Setting.NoiseReductionMode,
@@ -138,6 +142,8 @@ namespace ArvoreAbsorptionSystem
             public NativeArray<AirPollution> m_Air;
             [ReadOnly] public NativeArray<int> m_Density;
             public int m_DensitySize;
+            public bool m_NoiseEnabled;
+            public bool m_AirEnabled;
 
             // Parâmetros Ruído
             public int m_NoiseStrength; //Força em %
@@ -163,69 +169,75 @@ namespace ArvoreAbsorptionSystem
                 int centerDensityZ = (int)((float)noiseZ / mapSize * m_DensitySize);
 
                 // --- PROCESSAMENTO DO RUÍDO ---
-                float effectiveNoiseTreeCount = GetEffectiveTreeCount(centerDensityX, centerDensityZ, m_NoiseRadius);
-                if (effectiveNoiseTreeCount > 0f)
+                if (m_NoiseEnabled)
                 {
-                    float noiseReduction = 0f;
-                    float noiseForceFactor = m_NoiseStrength / 100f;
-                    float noiseLogFactor = m_NoiseLogFactor;
-                    float noiseRootFactor = m_NoiseRootFactor;
-
-                    // Switch para processar o modo escolhido pelo usuário no menu
-                    switch (m_NoiseMode)
+                    float effectiveNoiseTreeCount = GetEffectiveTreeCount(centerDensityX, centerDensityZ, m_NoiseRadius);
+                    if (effectiveNoiseTreeCount > 0f)
                     {
-                        case 1: // Realista (Logarítmico)
-                            noiseReduction = math.log10(effectiveNoiseTreeCount + 1f) * (noiseForceFactor + noiseLogFactor);
-                            break;
+                        float noiseReduction = 0f;
+                        float noiseForceFactor = m_NoiseStrength / 100f;
+                        float noiseLogFactor = m_NoiseLogFactor;
+                        float noiseRootFactor = m_NoiseRootFactor;
 
-                        case 2: // Parabólico (Raiz Quadrada)
-                            noiseReduction = math.sqrt(effectiveNoiseTreeCount) * (noiseForceFactor * noiseRootFactor);
-                            break;
+                        // Switch para processar o modo escolhido pelo usuário no menu
+                        switch (m_NoiseMode)
+                        {
+                            case 1: // Realista (Logarítmico)
+                                noiseReduction = math.log10(effectiveNoiseTreeCount + 1f) * (noiseForceFactor + noiseLogFactor);
+                                break;
 
-                        default: // Caso 0: Linear (Padrão)
-                            noiseReduction = effectiveNoiseTreeCount * noiseForceFactor;
-                            break;
+                            case 2: // Parabólico (Raiz Quadrada)
+                                noiseReduction = math.sqrt(effectiveNoiseTreeCount) * (noiseForceFactor * noiseRootFactor);
+                                break;
+
+                            default: // Caso 0: Linear (Padrão)
+                                noiseReduction = effectiveNoiseTreeCount * noiseForceFactor;
+                                break;
+                        }
+
+                        // Aplica o resultado final calculado no mapa do jogo
+                        NoisePollution noiseData = m_Noise[i];
+                        int currentNoise = (int)noiseData.m_PollutionTemp;
+                        noiseData.m_PollutionTemp = (short)math.max(0, currentNoise - (int)noiseReduction);
+                        m_Noise[i] = noiseData;
                     }
-
-                    // Aplica o resultado final calculado no mapa do jogo
-                    NoisePollution noiseData = m_Noise[i];
-                    int currentNoise = (int)noiseData.m_PollutionTemp;
-                    noiseData.m_PollutionTemp = (short)math.max(0, currentNoise - (int)noiseReduction);
-                    m_Noise[i] = noiseData;
                 }
 
                 // --- PROCESSAMENTO DO AR ---
-                float effectiveAirTreeCount = GetEffectiveTreeCount(centerDensityX, centerDensityZ, m_AirRadius);
-                if (effectiveAirTreeCount > 0f)
+                if (m_AirEnabled)
                 {
-                    float airReduction = 0f;
-                    float airFactorForce = m_AirStrength / 100f;
-                    float airLogFactor = m_NoiseLogFactor;
-                    float airRootFactor = m_NoiseRootFactor;
-
-                    // Switch para processar o modo escolhido para o Ar no menu
-                    switch (m_AirMode)
+                    float effectiveAirTreeCount = GetEffectiveTreeCount(centerDensityX, centerDensityZ, m_AirRadius);
+                    if (effectiveAirTreeCount > 0f)
                     {
-                        case 1: // Realista (Logarítmico Base 10)
-                                // Multiplicamos por 3.32f para compensar a escala menor do log10
-                            airReduction = math.log10(effectiveAirTreeCount + 1f) * (airFactorForce + airLogFactor);
-                            break;
+                        float airReduction = 0f;
+                        float airFactorForce = m_AirStrength / 100f;
+                        float airLogFactor = m_AirLogFactor;
+                        float airRootFactor = m_AirRootFactor;
 
-                        case 2: // Parabólico (Raiz Quadrada)
-                                // Multiplicamos por 1.5f para equilibrar a curva com os outros modos
-                            airReduction = math.sqrt(effectiveAirTreeCount) * (airFactorForce * airRootFactor);
-                            break;
+                        // Switch para processar o modo escolhido para o Ar no menu
+                        switch (m_AirMode)
+                        {
+                            case 1: // Realista (Logarítmico Base 10)
+                                    // Multiplicamos por 3.32f para compensar a escala menor do log10
+                                airReduction = math.log10(effectiveAirTreeCount + 1f) * (airFactorForce + airLogFactor);
+                                break;
 
-                        default: // Caso 0: Linear (Padrão)
-                            airReduction = effectiveAirTreeCount * airFactorForce;
-                            break;
+                            case 2: // Parabólico (Raiz Quadrada)
+                                    // Multiplicamos por 1.5f para equilibrar a curva com os outros modos
+                                airReduction = math.sqrt(effectiveAirTreeCount) * (airFactorForce * airRootFactor);
+                                break;
+
+                            default: // Caso 0: Linear (Padrão)
+                                airReduction = effectiveAirTreeCount * airFactorForce;
+                                break;
+                        }
+
+                        // Aplica o resultado final calculado no mapa de poluição do ar do jogo
+                        AirPollution airData = m_Air[i];
+                        int currentAir = (int)airData.m_Pollution;
+                        airData.m_Pollution = (short)math.max(0, currentAir - (int)airReduction);
+                        m_Air[i] = airData;
                     }
-
-                    // Aplica o resultado final calculado no mapa de poluição do ar do jogo
-                    AirPollution airData = m_Air[i];
-                    int currentAir = (int)airData.m_Pollution;
-                    airData.m_Pollution = (short)math.max(0, currentAir - (int)airReduction);
-                    m_Air[i] = airData;
                 }
             }
 

@@ -7,7 +7,7 @@
     <PublishConfigurationPath>Properties\PublishConfiguration.xml</PublishConfigurationPath>
     <Title>Árvore Absorption System</Title>
     <Version>$(VersionPrefix)</Version>
-    <Description>A complete, high-performance(?) rewrite of environmental tree absorption (Noise and Air) with custom mathematical curves.-- Reescrita completa e de alta performance da absorção ambiental de árvores (Ruído e Ar) com curvas matemáticas personalizáveis.</Description>
+    <Description>EN This mod allows trees to clean up pollution (noise and air). PT Esse mod permite as arvores limparem  poluição (Sonora e Ar).</Description>
     <Copyright>Copyright © 2026</Copyright>
   </PropertyGroup>
 

@@ -26,7 +26,13 @@ namespace ArvoreAbsorptionSystem
             GameManager.instance.localizationManager.AddSource("pt-BR", new LocalePT(m_Setting));
             GameManager.instance.localizationManager.AddSource("de-DE", new LocaleDE(m_Setting));
             GameManager.instance.localizationManager.AddSource("fr-FR", new LocaleFR(m_Setting));
-            GameManager.instance.localizationManager.AddSource("zh-Hans", new LocaleZH(m_Setting));
+            GameManager.instance.localizationManager.AddSource("es-ES", new LocaleES(m_Setting));
+            GameManager.instance.localizationManager.AddSource("it-IT", new LocaleIT(m_Setting));
+            GameManager.instance.localizationManager.AddSource("ja-JP", new LocaleJA(m_Setting));
+            GameManager.instance.localizationManager.AddSource("ko-KR", new LocaleKO(m_Setting));
+            GameManager.instance.localizationManager.AddSource("zh-HANS", new LocaleZH(m_Setting));
+            GameManager.instance.localizationManager.AddSource("pl-PL", new LocalePL(m_Setting));
+            GameManager.instance.localizationManager.AddSource("ru-RU", new LocaleRU(m_Setting));
 
             // Fixed: AssetDatabase now resolves with the added using statement
             AssetDatabase.global.LoadSettings(nameof(ArvoreAbsorptionSystem), m_Setting, new Setting(this));

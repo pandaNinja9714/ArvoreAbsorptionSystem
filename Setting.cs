@@ -29,6 +29,9 @@ namespace ArvoreAbsorptionSystem
         public bool VerboseLogging { get; set; } = false;
 
         // ================= NOISE POLLUTION CONTROLS =================
+        [SettingsUISection(kSection, "Noise Enabled")]
+        public bool NoiseReductionEnabled { get; set; } = true;
+        
         [SettingsUISlider(min = 0, max = 500, step = 1, unit = Unit.kPercentage)]
         [SettingsUISection(kSection, "Noise Reduction")]
         public int TreeNoiseStrength { get; set; } = 25;
@@ -50,6 +53,9 @@ namespace ArvoreAbsorptionSystem
         public float NoiseRootFactor { get; set; } = 1.5f;
 
         // ================= AIR POLLUTION CONTROLS =================
+        [SettingsUISection(kSection, "Air Enabled")]
+        public bool AirReductionEnabled { get; set; } = true;
+
         [SettingsUISlider(min = 0, max = 500, step = 1, unit = Unit.kPercentage)]
         [SettingsUISection(kSection, "Air Purification")]
         public int TreeAirStrength { get; set; } = 25;
